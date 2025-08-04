@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FilmFlix - Plataforma de Filmes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: #0a1016;
+            --secondary: #1a242d;
+            --accent: #00b4d8;
+            --text-primary: #ffffff;
+            --text-secondary: #b8c2cc;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .movie-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 180, 216, 0.3);
+            z-index: 10;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #00b4d8, #90e0ef);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-b from-black/80 to-transparent py-4 px-6 sticky top-0 z-50 backdrop-blur-sm">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-film text-2xl gradient-text"></i>
+                <h1 class="text-2xl font-bold gradient-text">FilmFlix</h1>
+            </div>
+            <div class="hidden lg:flex items-center space-x-8">
+                <a href="#popular" class="nav-link text-white hover:text-cyan-300 transition">Populares</a>
+                <a href="#trending" class="nav-link text-white hover:text-cyan-300 transition">Em Alta</a>
+                <a href="#upcoming" class="nav-link text-white hover:text-cyan-300 transition">Lançamentos</a>
+                <a href="#genres" class="nav-link text-white hover:text-cyan-300 transition">Gêneros</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="p-2 rounded-full bg-cyan-600 hover:bg-cyan-700 transition">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="lg:hidden text-white p-2">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-start overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent z-10"></div>
+        <img src="https://placehold.co/1920x1080" alt="Banner mostrando vários filmes populares em estilo colagem cinematográfica" class="absolute h-full w-full object-cover" />
+        
+        <div class="container mx-auto px-6 z-20 relative">
+            <div class="max-w-2xl">
+                <div class="flex items-center mb-4">
+                    <div class="bg-cyan-600 text-white px-3 py-1 rounded-full text-sm font-medium mr-3">NOVO</div>
+                    <span class="text-cyan-200">Lançamento desta semana</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">Matrix Resurrections</h1>
+                <div class="flex items-center mb-6">
+                    <div class="flex items-center mr-4">
+                        <i class="fas fa-star text-yellow-400 mr-1"></i>
+                        <span class="font-medium">8.7/10</span>
+                    </div>
+                    <span class="text-gray-300 mr-4">2023</span>
+                    <span class="text-gray-300">148 min</span>
+                </div>
+                <p class="text-gray-300 mb-8 text-lg">Neo volta à Matrix em uma nova aventura que expande o universo com efeitos visuais revolucionários e ação intensa.</p>
+                <div class="flex space-x-4">
+                    <button class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium flex items-center transition">
+                        <i class="fas fa-play mr-2"></i> Assistir Agora
+                    </button>
+                    <button class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium flex items-center transition backdrop-blur-sm">
+                        <i class="fas fa-info-circle mr-2"></i> Mais Informações
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Now Playing Section -->
+    <section id="popular" class="py-16 bg-gradient-to-b from-black/50 to-gray-900/50">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">
+                    <span class="gradient-text">Filmes em Cartaz</span>
+                </h2>
+                <a href="#" class="text-cyan-400 hover:text-cyan-300 transition flex items-center">
+                    Ver todos <i class="fas fa-chevron-right ml-2"></i>
+                </a>
+            </div>
+            
+            <div class="relative">
+                <div class="flex space-x-8 overflow-x-auto pb-6 scrollbar-hide">
+                    <!-- Movie Card 1 -->
+                    <div class="movie-card flex-shrink-0 w-60 bg-gray-900 rounded-xl overflow-hidden shadow-lg">
+                        <div class="relative">
+                            <img src="https://placehold.co/400x600" alt="Homem-Aranha no topo de arranha-céu com vista panorâmica da cidade" class="w-full h-80 object-cover" />
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                                <div class="text-xs px-2 py-1 bg-cyan-600 rounded-full inline-block">Ação</div>
+                            </div>
+                            <div class="absolute top-2 right-2 w-10 h-10 bg-gray-900/80 rounded-full flex items-center justify-center">
+                                <div class="relative">
+                                    <svg class="w-8 h-8" viewBox="0 0 36 36">
+                                        <path d="M18 2.0845
+                                          a 15.9155 15.9155 0 0 1 0 31.831
+                                          a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#333" stroke-width="3"/>
+                                        <path class="rating-circle" 
+                                        d="M18 2.0845
+                                          a 15.9155 15.9155 0 0 1 0 31.831
+                                          a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#00b4d8" stroke-width="3" stroke-linecap="round" style="--percentage: 0.93;"/>
+                                    </svg>
+                                    <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold">93%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold mb-1 truncate">Homem-Aranha: Sem Volta Para Casa</h3>
+                            <p class="text-gray-400 text-sm">2021 • 148 min</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Movie Card 2 -->
+                    <div class="movie-card flex-shrink-0 w-60 bg-gray-900 rounded-xl overflow-hidden shadow-lg">
+                        <div class="relative">
+                            <img src="https://placehold.co/400x600" alt="Batman em cena noturna com chuva e iluminação dramática" class="w-full h-80 object-cover" />
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                                <div class="text-xs px-2 py-1 bg-gray-600 rounded-full inline-block">Suspense</div>
+                            </div>
+                            <div class="absolute top-2 right-2 w-10 h-10 bg-gray-900/80 rounded-full flex items-center justify-center">
+                                <div class="relative">
+                                    <svg class="w-8 h-8" viewBox="0 0 36 36">
+                                        <path d="M18 2.0845
+                                          a 15.9155 15.9155 0 0 1 0 31.831
+                                          a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#333" stroke-width="3"/>
+                                        <path class="rating-circle" 
+                                        d="M18 2.0845
+                                          a 15.9155 15.9155 0 0 1 0 31.831
+                                          a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#00b4d8" stroke-width="3" stroke-linecap="round" style="--percentage: 0.88;"/>
+                                    </svg>
+                                    <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold">88%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold mb-1 truncate">The Batman</h3>
+                            <p class="text-gray-400 text-sm">2022 • 176 min</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Movie Card 3 -->
+                    <div class="movie-card flex-shrink-0 w-60 bg-gray-900 rounded-xl overflow-hidden shadow-lg">
+                        <div class="relative">
+                            <img src="https://placehold.co/400x600" alt="Avatar com paisagem alienígena exuberante e criaturas coloridas" class="w-full h-80 object-cover" />
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                                <div class="text-xs px-2 py-1 bg-green-600 rounded-full inline-block">Aventura</div>
+                            </div>
+                            <div class="absolute top-2 right-2 w-10 h-10 bg-gray-900/80 rounded-full flex items-center justify-center">
+                                <div class="relative">
+                                    <svg class="w-8 h-8" viewBox="0 0 36 36">
+                                        <path d="M18 2.0845
+                                          a 15.9155 15.9155 0 0 1 0 31.831
+                                          a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#333" stroke-width="3"/>
+                                        <path class="rating-circle" 
+                                        d="M18 2.0845
+                                          a 15.9155 15.9155 0 0 1 0 31.831
+                                          a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#00b4d8" stroke-width="3" stroke-linecap="round" style="--percentage: 0.91;"/>
+                                    </svg>
+                                    <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold">91%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold mb-1 truncate">Avatar: O Caminho da Água</h3>
+                            <p class="text-gray-400 text-sm">2022 • 192 min</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Movie Card 4 -->
+                    <div class="movie-card flex-shrink-0 w-60 bg-gray-900 rounded-xl overflow-hidden shadow-lg">
+                        <div class="relative">
+                            <img src="https://placehold.co/400x600" alt="Top Gun Maverick com cena aérea dramática de caças" class="w-full h-80 object-cover" />
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                                <div class="text-xs px-2 py-1 bg-blue-600 rounded-full inline-block">Ação</div>
+                            </div>
+                            <div class="absolute top-2 right-2 w-10 h-10 bg-gray-900/80 rounded-full flex items-center justify-center">
+                                <div class="relative">
+                                    <svg class="w-8 h-8" viewBox="0 0 36 36">
+                                        <path d="M18 2.0845
+                                          a 15.9155 15.9155 0 0 1 0 31.831
+                                          a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#333" stroke-width="3"/>
+                                        <path class="rating-circle" 
+                                        d="M18 2.0845
+                                          a 15.9155 15.9155 0 0 1 0 31.831
+                                          a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#00b4d8" stroke-width="3" stroke-linecap="round" style="--percentage: 0.96;"/>
+                                    </svg>
+                                    <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold">96%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold mb-1 truncate">Top Gun: Maverick</h3>
+                            <p class="text-gray-400 text-sm">2022 • 131 min</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Movie Card 5 -->
+                    <div class="movie-card flex-shrink-0 w-60 bg-gray-900 rounded-xl overflow-hidden shadow-lg">
+                        <div class="relative">
+                            <img src="https://placehold.co/400x600" alt="Duna com paisagem desértica e personagens em trajes especiais" class="w-full h-80 object-cover" />
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                                <div class="text-xs px-2 py-1 bg-yellow-600 rounded-full inline-block">Ficção Científica</div>
+                            </div>
+                            <div class="absolute top-2 right-2 w-10 h-10 bg-gray-900/80 rounded-full flex items-center justify-center">
+                                <div class="relative">
+                                    <svg class="w-8 h-8" viewBox="0 0 36 36">
+                                        <path d="M18 2.0845
+                                          a 15.9155 15.9155 0 0 1 0 31.831
+                                          a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#333" stroke-width="3"/>
+                                        <path class="rating-circle" 
+                                        d="M18 2.0845
+                                          a 15.9155 15.9155 0 0 1 0 31.831
+                                          a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#00b4d8" stroke-width="3" stroke-linecap="round" style="--percentage: 0.83;"/>
+                                    </svg>
+                                    <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold">83%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold mb-1 truncate">Duna</h3>
+                            <p class="text-gray-400 text-sm">2021 • 155 min</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Section -->
+    <section id="trending" class="py-16 bg-gray-900/50">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">
+                    <span class="gradient-text">Em Alta</span>
+                </h2>
+                <div class="flex space-x-4">
+                    <button class="px-4 py-1 rounded-full bg-gray-700 text-gray-300 hover:bg-gray-600 transition">Hoje</button>
+                    <button class="px-4 py-1 rounded-full bg-cyan-600 text-white hover:bg-cyan-700 transition">Semana</button>
+                    <button class="px-4 py-1 rounded-full bg-gray-700 text-gray-300 hover:bg-gray-600 transition">Mês</button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Large Card 1 -->
+                <div class="movie-card bg-gray-800 rounded-xl overflow-hidden shadow-lg col-span-1 md:col-span-2 relative group">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent z-10"></div>
+                    <img src="https://placehold.co/1280x720" alt="Stranger Things elenco completo em posição dramática com luzes piscantes" class="w-full h-96 object-cover" />
+                    <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
+                        <div class="flex items-center mb-2">
+                            <div class="bg-cyan-600 text-white px-3 py-1 rounded-full text-sm font-medium mr-3">SÉRIE</div>
+                            <span class="text-gray-300">2022 • 3 temporadas</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Stranger Things</h3>
+                        <p class="text-gray-300 mb-4">Um grupo de amigos se envolve em uma série de eventos sobrenaturais na pacata cidade de Hawkins...</p>
+                        <div class="flex space-x-3">
+                            <button class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-medium transition flex items-center">
+                                <i class="fas fa-play mr-2"></i> Assistir
+                            </button>
+                            <button class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-medium transition flex items-center backdrop-blur-sm">
+                                <i class="fas fa-plus mr-2"></i> Minha Lista
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Small Card 1 -->
+                <div class="movie-card bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="relative h-full">
+                        <img src="https://placehold.co/600x900" alt="The Last of Us com protagonistas em ambiente pós-apocalíptico" class="w-full h-64 md:h-full object-cover" />
+                        <div class="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4 z-10">
+                            <div class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium inline-block">NOVO</div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 z-10">
+                            <h3 class="font-bold text-lg">The Last of Us</h3>
+                            <div class="flex items-center text-sm text-gray-300 mt-1">
+                                <span>Série • 2023</span>
+                                <div class="ml-auto bg-gray-900 px-2 py-1 rounded-full flex items-center">
+                                    <i class="fas fa-star text-yellow-400 mr-1 text-xs"></i>
+                                    <span>9.1</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Small Card 2 -->
+                <div class="movie-card bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="relative h-full">
+                        <img src="https://placehold.co/600x900" alt="The Mandalorian com personagem principal em traje espacial futurista" class="w-full h-64 md:h-full object-cover" />
+                        <div class="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4 z-10">
+                            <div class="bg-yellow-600 text-white px-3 py-1 rounded-full text-xs font-medium inline-block">POPULAR</div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 z-10">
+                            <h3 class="font-bold text-lg">The Mandalorian</h3>
+                            <div class="flex items-center text-sm text-gray-300 mt-1">
+                                <span>Série • 2019</span>
+                                <div class="ml-auto bg-gray-900 px-2 py-1 rounded-full flex items-center">
+                                    <i class="fas fa-star text-yellow-400 mr-1 text-xs"></i>
+                                    <span>8.7</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Section -->
+    <section id="upcoming" class="py-16 bg-gradient-to-b from-gray-900/50 to-black/80">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">
+                    <span class="gradient-text">Próximos Lançamentos</span>
+                </h2>
+                <a href="#" class="text-cyan-400 hover:text-cyan-300 transition flex items-center">
+                    Ver todos <i class="fas fa-chevron-right ml-2"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                <!-- Upcoming Movie 1 -->
+                <div class="movie-card bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img src="https://placehold.co/500x750" alt="Guardians of the Galaxy Vol. 3 com elenco colorido em pose heroica" class="w-full h-64 object-cover" />
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                            <div class="text-xs px-2 py-1 bg-purple-600 rounded-full inline-block">Ficção Científica</div>
+                        </div>
+                        <div class="absolute top-2 left-2 bg-black/80 text-xs px-2 py-1 rounded-full">
+                            <span>5 de maio</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-1 truncate">Guardiões da Galáxia Vol. 3</h3>
+                        <p class="text-gray-400 text-sm">2023 • Ação</p>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Movie 2 -->
+                <div class="movie-card bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img src="https://placehold.co/500x750" alt="The Flash com personagem principal em traje vermelho elétrico" class="w-full h-64 object-cover" />
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                            <div class="text-xs px-2 py-1 bg-red-600 rounded-full inline-block">Super-Herói</div>
+                        </div>
+                        <div class="absolute top-2 left-2 bg-black/80 text-xs px-2 py-1 rounded-full">
+                            <span>16 de junho</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-1 truncate">The Flash</h3>
+                        <p class="text-gray-400 text-sm">2023 • Aventura</p>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Movie 3 -->
+                <div class="movie-card bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img src="https://placehold.co/500x750" alt="Indiana Jones em cena de aventura com templo antigo ao fundo" class="w-full h-64 object-cover" />
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                            <div class="text-xs px-2 py-1 bg-yellow-600 rounded-full inline-block">Aventura</div>
+                        </div>
+                        <div class="absolute top-2 left-2 bg-black/80 text-xs px-2 py-1 rounded-full">
+                            <span>30 de junho</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-1 truncate">Indiana Jones 5</h3>
+                        <p class="text-gray-400 text-sm">2023 • Ação</p>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Movie 4 -->
+                <div class="movie-card bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img src="https://placehold.co/500x750" alt="Oppenheimer com cena dramática em preto e branco" class="w-full h-64 object-cover" />
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                            <div class="text-xs px-2 py-1 bg-gray-600 rounded-full inline-block">Drama</div>
+                        </div>
+                        <div class="absolute top-2 left-2 bg-black/80 text-xs px-2 py-1 rounded-full">
+                            <span>21 de julho</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-1 truncate">Oppenheimer</h3>
+                        <p class="text-gray-400 text-sm">2023 • Histórico</p>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Movie 5 -->
+                <div class="movie-card bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img src="https://placehold.co/500x750" alt="Barbie com cena colorida e estética vibrante" class="w-full h-64 object-cover" />
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                            <div class="text-xs px-2 py-1 bg-pink-600 rounded-full inline-block">Comédia</div>
+                        </div>
+                        <div class="absolute top-2 left-2 bg-black/80 text-xs px-2 py-1 rounded-full">
+                            <span>21 de julho</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold mb-1 truncate">Barbie</h3>
+                        <p class="text-gray-400 text-sm">2023 • Fantasia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Genres Section -->
+    <section id="genres" class="py-16 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-10 text-center">
+                <span class="gradient-text">Explore por Gênero</span>
+            </h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <!-- Genre 1 -->
+                <div class="genre-card bg-gradient-to-br from-red-600 to-red-900 rounded-xl overflow-hidden shadow-lg relative group cursor-pointer">
+                    <div class="h-40 flex items-center justify-center">
+                        <i class="fas fa-explosion text-4xl text-white group-hover:scale-110 transition"></i>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 bg-black/50 p-4 text-center">
+                        <h3 class="font-bold text-white">Ação</h3>
+                    </div>
+                </div>
+                
+                <!-- Genre 2 -->
+                <div class="genre-card bg-gradient-to-br from-blue-600 to-blue-900 rounded-xl overflow-hidden shadow-lg relative group cursor-pointer">
+                    <div class="h-40 flex items-center justify-center">
+                        <i class="fas fa-robot text-4xl text-white group-hover:scale-110 transition"></i>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 bg-black/50 p-4 text-center">
+                        <h3 class="font-bold text-white">Ficção Científica</h3>
+                    </div>
+                </div>
+                
+                <!-- Genre 3 -->
+                <div class="genre-card bg-gradient-to-br from-green-600 to-green-900 rounded-xl overflow-hidden shadow-lg relative group cursor-pointer">
+                    <div class="h-40 flex items-center justify-center">
+                        <i class="fas fa-map-marked-alt text-4xl text-white group-hover:scale-110 transition"></i>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 bg-black/50 p-4 text-center">
+                        <h3 class="font-bold text-white">Aventura</h3>
+                    </div>
+                </div>
+                
+                <!-- Genre 4 -->
+                <div class="genre-card bg-gradient-to-br from-yellow-600 to-yellow-900 rounded-xl overflow-hidden shadow-lg relative group cursor-pointer">
+                    <div class="h-40 flex items-center justify-center">
+                        <i class="fas fa-grin-squint-tears text-4xl text-white group-hover:scale-110 transition"></i>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 bg-black/50 p-4 text-center">
+                        <h3 class="font-bold text-white">Comédia</h3>
+                    </div>
+                </div>
+                
+                <!-- Genre 5 -->
+                <div class="genre-card bg-gradient-to-br from-gray-600 to-gray-900 rounded-xl overflow-hidden shadow-lg relative group cursor-pointer">
+                    <div class="h-40 flex items-center justify-center">
+                        <i class="fas fa-ghost text-4xl text-white group-hover:scale-110 transition"></i>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 bg-black/50 p-4 text-center">
+                        <h3 class="font-bold text-white">Terror</h3>
+                    </div>
+                </div>
+                
+                <!-- Genre 6 -->
+                <div class="genre-card bg-gradient-to-br from-purple-600 to-purple-900 rounded-xl overflow-hidden shadow-lg relative group cursor-pointer">
+                    <div class="h-40 flex items-center justify-center">
+                        <i class="fas fa-heart text-4xl text-white group-hover:scale-110 transition"></i>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 bg-black/50 p-4 text-center">
+                        <h3 class="font-bold text-white">Romance</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black/80 py-12 px-6">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-8 md:mb-0">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fas fa-film text-2xl gradient-text"></i>
+                        <h2 class="text-2xl font-bold gradient-text">FilmFlix</h2>
+                    </div>
+                    <p class="text-gray-400 max-w-md">Sua plataforma definitiva para descobrir e assistir aos melhores filmes e séries. Uma jornada cinematográfica sem igual.</p>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-gray-300 font-semibold mb-4">Navegação</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Início</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Filmes</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Séries</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Minha Lista</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-gray-300 font-semibold mb-4">Informações</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Sobre Nós</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Contato</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Termos de Serviço</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Política de Privacidade</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-gray-300 font-semibold mb-4">Redes Sociais</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-blue-500 transition text-xl"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-sky-400 transition text-xl"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-pink-600 transition text-xl"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-red-500 transition text-xl"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
+                <p>&copy; 2023 FilmFlix. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- API Integration Script -->
+    <script>
+        // API Configuration
+        const API_KEY = 'YOUR_TMDB_API_KEY'; // Replace with your actual API key
+        const BASE_URL = 'https://api.themoviedb.org/3';
+        const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/original';
+        
+        // Fetch popular movies
+        async function fetchPopularMovies() {
+            try {
+                const response = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=pt-BR&page=1`);
+                const data = await response.json();
+                console.log('Popular Movies:', data.results);
+                // Here you would update the DOM with the fetched movies
+            } catch (error) {
+                console.error('Error fetching popular movies:', error);
+            }
+        }
+        
+        // Fetch now playing movies
+        async function fetchNowPlaying() {
+            try {
+                const response = await fetch(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=pt-BR&page=1`);
+                const data = await response.json();
+                console.log('Now Playing:', data.results);
+                // Update the DOM with now playing movies
+            } catch (error) {
+                console.error('Error fetching now playing movies:', error);
+            }
+        }
+        
+        // Fetch upcoming movies
+        async function fetchUpcomingMovies() {
+            try {
+                const response = await fetch(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=pt-BR&page=1`);
+                const data = await response.json();
+                console.log('Upcoming Movies:', data.results);
+                // Update the DOM with upcoming movies
+            } catch (error) {
+                console.error('Error fetching upcoming movies:', error);
+            }
+        }
+        
+        // Search movies function
+        async function searchMovies(query) {
+            try {
+                const response = await fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&language=pt-BR&query=${query}&page=1`);
+                const data = await response.json();
+                console.log('Search Results:', data.results);
+                // Update the DOM with search results
+            } catch (error) {
+                console.error('Error searching movies:', error);
+            }
+        }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fetch initial data
+            fetchPopularMovies();
+            fetchNowPlaying();
+            fetchUpcomingMovies();
+            
+            // Set up event listeners
+            const searchButton = document.querySelector('.search-button');
+            const searchInput = document.querySelector('.search-input');
+            
+            searchButton.addEventListener('click', () => {
+                if (searchInput.value.trim() !== '') {
+                    searchMovies(searchInput.value.trim());
+                }
+            });
+            
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && searchInput.value.trim() !== '') {
+                    searchMovies(searchInput.value.trim());
+                }
+            });
+        });
+    </script>
+</body>
+</html>
