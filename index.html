@@ -99,32 +99,28 @@
         <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent z-10"></div>
         <img src="https://placehold.co/1920x1080" alt="Banner mostrando vários filmes populares em estilo colagem cinematográfica" class="absolute h-full w-full object-cover" />
         
-        <div class="container mx-auto px-6 z-20 relative">
-            <div class="max-w-2xl">
-                <div class="flex items-center mb-4">
-                    <div class="bg-cyan-600 text-white px-3 py-1 rounded-full text-sm font-medium mr-3">NOVO</div>
-                    <span class="text-cyan-200">Lançamento desta semana</span>
-                </div>
-                <h1 class="text-4xl md:text-6xl font-bold mb-4">Matrix Resurrections</h1>
-                <div class="flex items-center mb-6">
-                    <div class="flex items-center mr-4">
-                        <i class="fas fa-star text-yellow-400 mr-1"></i>
-                        <span class="font-medium">8.7/10</span>
-                    </div>
-                    <span class="text-gray-300 mr-4">2023</span>
-                    <span class="text-gray-300">148 min</span>
-                </div>
-                <p class="text-gray-300 mb-8 text-lg">Neo volta à Matrix em uma nova aventura que expande o universo com efeitos visuais revolucionários e ação intensa.</p>
-                <div class="flex space-x-4">
-                    <button class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium flex items-center transition">
-                        <i class="fas fa-play mr-2"></i> Assistir Agora
-                    </button>
-                    <button class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium flex items-center transition backdrop-blur-sm">
-                        <i class="fas fa-info-circle mr-2"></i> Mais Informações
-                    </button>
-                </div>
-            </div>
-        </div>
+    <h1 id="hero-titulo" class="text-4xl md:text-6xl font-bold mb-4">Título aqui</h1>
+
+<div class="flex items-center mb-6">
+    <div class="flex items-center mr-4">
+        <i class="fas fa-star text-yellow-400 mr-1"></i>
+        <span id="hero-nota" class="font-medium">0.0/10</span>
+    </div>
+    <span id="hero-ano" class="text-gray-300 mr-4">0000</span>
+    <span id="hero-duracao" class="text-gray-300">0 min</span>
+</div>
+
+<p id="hero-sinopse" class="text-gray-300 mb-8 text-lg">Sinopse aqui...</p>
+
+<img id="hero-imagem" src="https://placehold.co/1920x1080"
+  class="absolute h-full w-full object-cover" alt="Capa destaque" />
+
+<button id="btn-assistir" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium flex items-center transition">
+    <i class="fas fa-play mr-2"></i> Assistir Agora
+</button>
+<button id="btn-info" class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium flex items-center transition backdrop-blur-sm">
+    <i class="fas fa-info-circle mr-2"></i> Mais Informações
+</button>
     </section>
 
     <!-- Now Playing Section -->
@@ -488,7 +484,46 @@ function renderMovies(movies, containerId) {
         container.appendChild(card);
     });
 }
+async function carregarFilmeDestaque() {
+  try {
+    const res = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=pt-BR&page=1`);
+    const data = await res.json();
+    const filme = data.results[0];
 
+    // Buscar detalhes completos (para tempo de duração)
+    const detalhesRes = await fetch(`${BASE_URL}/movie/${filme.id}?api_key=${API_KEY}&language=pt-BR`);
+    const detalhes = await detalhesRes.json();
+
+    // Buscar trailer
+    const videoRes = await fetch(`${BASE_URL}/movie/${filme.id}/videos?api_key=${API_KEY}&language=pt-BR`);
+    const videoData = await videoRes.json();
+    const trailer = videoData.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+
+    // Preencher dados no HTML
+    document.getElementById('hero-titulo').textContent = filme.title;
+    document.getElementById('hero-nota').textContent = `${filme.vote_average.toFixed(1)}/10`;
+    document.getElementById('hero-ano').textContent = (filme.release_date || '').split('-')[0];
+    document.getElementById('hero-duracao').textContent = `${detalhes.runtime} min`;
+    document.getElementById('hero-sinopse').textContent = filme.overview || 'Sem descrição.';
+    document.getElementById('hero-imagem').src = `${IMAGE_BASE_URL}${filme.backdrop_path}`;
+
+    // Botões
+    const btnAssistir = document.getElementById('btn-assistir');
+    const btnInfo = document.getElementById('btn-info');
+
+    if (trailer) {
+      btnAssistir.onclick = () => window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
+      btnAssistir.disabled = false;
+    } else {
+      btnAssistir.disabled = true;
+    }
+
+    btnInfo.onclick = () => abrirModalFilme(filme);
+
+  } catch (e) {
+    console.error('Erro ao carregar filme destaque:', e);
+  }
+      }
 // Busca os filmes em cartaz e renderiza
 async function fetchNowPlaying() {
     try {
@@ -502,6 +537,7 @@ async function fetchNowPlaying() {
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchNowPlaying();
+    carregarFilmeDestaque();
 });
   </script>
 </body>
